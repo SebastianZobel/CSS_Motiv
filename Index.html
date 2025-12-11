@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>CSS Atelier – KI-Bild-MVP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tailwind via CDN für schnelles, modernes Styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-50 min-h-screen">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col gap-6">
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div>
+        <h1 class="text-3xl font-bold tracking-tight">
+          CSS Atelier – Zukunftsgalerie
+        </h1>
+        <p class="text-slate-300 mt-1">
+          Erzeuge KI-Bild-Ideen zu Service &amp; Sales in der Zukunft und füge sie zur CSS Zukunftsgalerie hinzu.
+        </p>
+        <p class="text-xs text-slate-400 mt-1">
+          <strong>Hinweis:</strong> Dieses MVP erzeugt Platzhalterbilder. Die Stelle für echte KI-Generierung ist im Code markiert.
+        </p>
+      </div>
+      <nav class="flex gap-2">
+        <button id="nav-create" class="px-3 py-1.5 rounded-full text-sm font-medium bg-sky-500 hover:bg-sky-400">
+          Bild erstellen
+        </button>
+        <button id="nav-gallery" class="px-3 py-1.5 rounded-full text-sm font-medium bg-slate-800 hover:bg-slate-700">
+          Galerie
+        </button>
+      </nav>
+    </header>
+
+    <!-- Progress -->
+    <div id="step-indicator" class="flex items-center gap-2 text-sm text-slate-300">
+      <span id="step-label" class="font-medium">Schritt 1 von 3</span>
+      <div class="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+        <div id="step-bar" class="h-full bg-sky-500 w-1/3 transition-all"></div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="grid md:grid-cols-2 gap-6 items-stretch">
+      <!-- LEFT COLUMN: Steps -->
+      <div class="flex flex-col gap-4">
+        <!-- STEP 1: Thema wählen -->
+        <section id="step-1" class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-col gap-3">
+          <h2 class="text-lg font-semibold flex items-center gap-2">
+            <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-sky-500 text-xs font-bold">1</span>
+            Thema auswählen
+          </h2>
+          <p class="text-sm text-slate-300">
+            Wähle ein Zukunftsthema. Du kannst später weitere Bilder mit anderen Themen erstellen.
+          </p>
+          <div class="grid gap-3">
+            <button data-theme="theme1" class="theme-card flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-950/40 hover:border-sky-500 hover:bg-slate-900/70 transition">
+              <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500/20 text-2xl">
+                🤖
+              </div>
+              <div class="text-left">
+                <div class="font-semibold">Thema 1: Service &amp; Sales in 2030</div>
+                <p class="text-xs text-slate-300 mt-0.5">
+                  Prompte, wie Du Dir Service &amp; Sales in 5 Jahren im CSS wünschst. Was ist anders, smarter oder menschlicher?
+                </p>
+              </div>
+            </button>
+            <button data-theme="theme2" class="theme-card flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-950/40 hover:border-sky-500 hover:bg-slate-900/70 transition">
+              <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500/20 text-2xl">
+                📱
+              </div>
+              <div class="text-left">
+                <div class="font-semibold">Thema 2: Kundeninteraktion in 5 Jahren</div>
+                <p class="text-xs text-slate-300 mt-0.5">
+                  Prompte, wie der Kunde die Interaktion mit uns im CSS in 5 Jahren erlebt.
+                </p>
+              </div>
+            </button>
+            <button data-theme="theme3" class="theme-card flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-950/40 hover:border-sky-500 hover:bg-slate-900/70 transition">
+              <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500/20 text-2xl">
+                🚀
+              </div>
+              <div class="text-left">
+                <div class="font-semibold">Thema 3: Fit für die Zukunft</div>
+                <p class="text-xs text-slate-300 mt-0.5">
+                  Beschreibe die heutige Superpower deines Teams, die Euch für zukünftige Veränderungen gut aufstellt.
+                </p>
+              </div>
+            </button>
+          </div>
+          <div class="flex justify-between items-center pt-2">
+            <span class="text-xs text-slate-400">
+              Tippe auf eine Kachel, um das Thema zu wählen.
+            </span>
+            <button id="btn-step1-next" class="px-3 py-1.5 rounded-full text-sm font-medium bg-sky-500/40 text-slate-300 cursor-not-allowed" disabled>
+              Weiter
+            </button>
+          </div>
+        </section>
+
+        <!-- STEP 2: Prompts & Designelemente -->
+        <section id="step-2" class="hidden bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-col gap-3">
+          <h2 class="text-lg font-semibold flex items-center gap-2">
+            <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-sky-500 text-xs font-bold">2</span>
+            Idee &amp; Design beschreiben
+          </h2>
+          <p class="text-sm text-slate-300">
+            Beschreibe Deine Bildidee in drei kurzen Sätzen und wähle Designelemente aus.
+          </p>
+
+          <div class="flex flex-col gap-3">
+            <div>
+              <label class="block text-xs font-semibold mb-1" for="input-hauptmotiv">
+                Hauptmotiv (Wer oder was steht im Mittelpunkt?)
+              </label>
+              <textarea id="input-hauptmotiv" rows="2" class="w-full rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500" placeholder="z. B. Kundenberaterin mit Headset, Kunde mit Smartphone, Team im Shop, digitale Assistent-Figur"></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold mb-1" for="input-aktion">
+                Aktion / Interaktion (Was passiert gerade?)
+              </label>
+              <textarea id="input-aktion" rows="2" class="w-full rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500" placeholder="z. B. hilft einem Kunden, zeigt Optionen auf einem Display, feiert guten Service, nutzt Self-Service App"></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold mb-1" for="input-kontext">
+                Kontext &amp; Stimmung (Wo spielt die Szene, wie fühlt sie sich an?)
+              </label>
+              <textarea id="input-kontext" rows="2" class="w-full rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500" placeholder="z. B. helles, modernes Contact-Center mit viel Glas und Pflanzen, entspannte und konzentrierte Atmosphäre"></textarea>
+            </div>
+          </div>
+
+          <div class="border-t border-slate-800 pt-3 mt-2">
+            <h3 class="text-sm font-semibold mb-2">Designelemente</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div class="flex flex-col gap-1">
+                <label for="select-bildtyp" class="font-semibold">Bildtyp</label>
+                <select id="select-bildtyp" class="w-full rounded-xl border border-slate-700 bg-slate-950/60 px-2 py-1.5">
+                  <option value="photorealistic scene">Fotorealistische Szene</option>
+                  <option value="photorealistic portrait">Fotorealistisches Portrait</option>
+                  <option value="3D illustration">3D-Illustration</option>
+                  <option value="flat vector illustration">Flache Vektor-Illustration</option>
+                  <option value="isometric illustration">Isometrische Illustration</option>
+                  <option value="cartoon comic style">Cartoon / Comic</option>
+                  <option value="line art pictogram style">Line-Art / Piktogramm</option>
+                  <option value="abstract illustration">Abstrakte Illustration</option>
+                </select>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label for="select-stil" class="font-semibold">Stil</label>
+                <select id="select-stil" class="w-full rounded-xl border border-slate-700 bg-slate-950/60 px-2 py-1.5">
+                  <option value="modern corporate look">Moderner Corporate Look</option>
+                  <option value="warm and human, friendly tone">Warm &amp; menschlich</option>
+                  <option value="futuristic tech, holographic interfaces">Futuristisch-Tech (Hologramme, Interfaces)</option>
+                  <option value="playful, slightly cartoonish">Verspielt &amp; witzig / cartoonhaft</option>
+                  <option value="minimalistic and clean">Minimalistisch &amp; clean</option>
+                  <option value="retro-futuristic with subtle neon accents">Retro-Future mit Neon-Akzenten</option>
+                  <option value="sketchy illustrative style">Skizzenhafter Illustrationsstil</option>
+                </select>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label for="select-licht" class="font-semibold">Licht</label>
+                <select id="select-licht" class="w-full rounded-xl border border-slate-700 bg-slate-950/60 px-2 py-1.5">
+                  <option value="soft daylight">Weiches Tageslicht</option>
+                  <option value="golden hour sunlight">Golden Hour (warme Abendsonne)</option>
+                  <option value="neon and LED screen light">Neon- / LED-Licht von Displays</option>
+                  <option value="night scene with city lights">Nacht mit Stadtlichtern</option>
+                  <option value="subtle party lighting with confetti feel">Leichtes Party-/Konfetti-Licht</option>
+                  <option value="neutral studio lighting">Neutrale Studio-Beleuchtung</option>
+                  <option value="strong screen glow as main light source">Display-Glow als Hauptlichtquelle</option>
+                </select>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label for="select-farben" class="font-semibold">Farben</label>
+                <select id="select-farben" class="w-full rounded-xl border border-slate-700 bg-slate-950/60 px-2 py-1.5">
+                  <option value="warm colors with blue accents">Warme Farben mit blauen Akzenten</option>
+                  <option value="cool blues and teals, clean digital look">Kühle Blau- und Türkistöne, clean</option>
+                  <option value="vibrant, saturated colors, friendly and lively">Kräftige, freundliche Farben</option>
+                  <option value="soft pastel tones, calm and inviting">Soft Pastellfarben, ruhig und einladend</option>
+                  <option value="monochrome in blue tones with a few highlights">Monochrom in Blautönen mit Akzenten</option>
+                  <option value="dark background with glowing accent colors">Dunkler Hintergrund mit leuchtenden Akzenten</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center pt-2">
+            <button id="btn-step2-back" class="px-3 py-1.5 rounded-full text-sm font-medium bg-slate-800 hover:bg-slate-700">
+              Zurück
+            </button>
+            <button id="btn-generate" class="px-3 py-1.5 rounded-full text-sm font-medium bg-sky-500 hover:bg-sky-400">
+              Bild erzeugen
+            </button>
+          </div>
+        </section>
+
+        <!-- STEP 3: Prompt-Vorschau (links, Bild rechts) -->
+        <section id="step-3" class="hidden bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-col gap-3">
+          <h2 class="text-lg font-semibold flex items-center gap-2">
+            <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-sky-500 text-xs font-bold">3</span>
+            Prompt &amp; Galerie
+          </h2>
+          <p class="text-sm text-slate-300">
+            Hier siehst Du den zusammengesetzten Prompt, den Du für ein Bild-KI-Tool verwenden kannst.
+          </p>
+          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3 text-xs max-h-64 overflow-auto">
+            <pre id="prompt-preview" class="whitespace-pre-wrap font-mono text-slate-100 text-xs"></pre>
+          </div>
+          <div class="flex justify-between items-center pt-2">
+            <button id="btn-step3-back" class="px-3 py-1.5 rounded-full text-sm font-medium bg-slate-800 hover:bg-slate-700">
+              Zurück
+            </button>
+            <div class="flex gap-2">
+              <button id="btn-regenerate" class="px-3 py-1.5 rounded-full text-sm font-medium bg-slate-700 hover:bg-slate-600">
+                Neu erzeugen
+              </button>
+              <button id="btn-add-gallery" class="px-3 py-1.5 rounded-full text-sm font-medium bg-emerald-500 hover:bg-emerald-400">
+                Zur Galerie hinzufügen
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- RIGHT COLUMN: Bild + Galerie -->
+      <div class="flex flex-col gap-4">
+        <!-- Result image panel -->
+        <section class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-col gap-3 min-h-[260px]">
+          <h2 class="text-lg font-semibold flex items-center gap-2">
+            <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-sky-500/80 text-xs font-bold">➜</span>
+            Aktuelles Bild
+          </h2>
+          <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-950 border border-slate-800 flex items-center justify-center">
+            <img id="result-image" alt="Generiertes Bild" class="w-full h-full object-cover hidden" />
+            <div id="result-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center text-slate-400 text-xs px-6">
+              <div class="text-4xl mb-2">🧠✨</div>
+              <p class="font-semibold">Dein KI-Bild erscheint hier.</p>
+              <p class="mt-1">
+                Wähle ein Thema, beschreibe Deine Idee und klicke auf <strong>„Bild erzeugen“</strong>.
+              </p>
+            </div>
+            <div id="loading-overlay" class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm flex flex-col items-center justify-center text-sm text-sky-100 hidden">
+              <svg class="animate-spin h-6 w-6 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 100 16v-4l-3.5 3.5L12 24v-4a8 8 0 01-8-8z"></path>
+              </svg>
+              <p>„Denkt“ über Deine Bildidee nach …</p>
+            </div>
+          </div>
+          <p id="result-caption" class="text-xs text-slate-300 min-h-[2.5rem]">
+            Noch kein Bild generiert.
+          </p>
+        </section>
+
+        <!-- Gallery inline preview -->
+        <section id="gallery-panel" class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-semibold flex items-center gap-2">
+              <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-sky-500/80 text-xs font-bold">★</span>
+              Zukunftsgalerie (lokal)
+            </h2>
+            <button id="btn-open-gallery" class="text-xs px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700">
+              Ganze Galerie
+            </button>
+          </div>
+          <p class="text-xs text-slate-300">
+            Die Galerie wird im Browser gespeichert. Du kannst sie im Event auf einem Gerät füllen und auf einem Bildschirm im Vollbild zeigen.
+          </p>
+          <div id="gallery-thumbs" class="grid grid-cols-3 gap-2 text-[0.65rem] text-slate-300"></div>
+        </section>
+      </div>
+    </main>
+
+    <!-- FULL GALLERY MODAL -->
+    <div id="gallery-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+      <div class="max-w-5xl w-full max-h-[90vh] bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden flex flex-col">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-800">
+          <div>
+            <h2 class="text-lg font-semibold">Zukunftsgalerie</h2>
+            <p class="text-xs text-slate-300">Alle generierten Bildideen dieses Browsers.</p>
+          </div>
+          <div class="flex gap-2 items-center">
+            <button id="btn-gallery-slideshow" class="text-xs px-2 py-1 rounded-full bg-sky-600 hover:bg-sky-500">
+              Slideshow starten
+            </button>
+            <button id="btn-gallery-close" class="text-xs px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700">
+              Schließen
+            </button>
+          </div>
+        </div>
+        <div id="gallery-list" class="flex-1 overflow-auto p-4 grid md:grid-cols-3 gap-3 text-xs text-slate-200"></div>
+      </div>
+    </div>
+
+    <!-- SLIDESHOW OVERLAY -->
+    <div id="slideshow-overlay" class="fixed inset-0 bg-black flex flex-col items-center justify-center z-50 hidden">
+      <div class="absolute top-4 left-4 text-white text-sm bg-black/60 px-3 py-1 rounded-full">
+        CSS Zukunftsgalerie – Vollbild
+      </div>
+      <button id="btn-slideshow-exit" class="absolute top-4 right-4 text-xs px-3 py-1 rounded-full bg-white/10 border border-white/30 text-white hover:bg-white/20">
+        Slideshow beenden
+      </button>
+      <img id="slideshow-image" class="max-w-[90vw] max-h-[70vh] object-contain rounded-xl shadow-2xl border border-white/20" alt="Slideshow Bild" />
+      <div id="slideshow-caption" class="mt-3 text-sm text-slate-100 max-w-[70vw] text-center"></div>
+    </div>
+  </div>
+
+  <script>
+    // ---------------------------
+    // Globaler State
+    // ---------------------------
+    const state = {
+      selectedTheme: null,
+      themes: {
+        theme1: {
+          id: "theme1",
+          label: "Service & Sales in 2030",
+          description: "Wie wünschst du dir Service & Sales in 5 Jahren im CSS? Anders, smarter oder menschlicher?"
+        },
+        theme2: {
+          id: "theme2",
+          label: "Kundeninteraktion in 5 Jahren",
+          description: "Wie erlebt der Kunde die Interaktion mit uns im CSS in 5 Jahren?"
+        },
+        theme3: {
+          id: "theme3",
+          label: "Fit für die Zukunft",
+          description: "Welche Superpower deines Teams hilft euch, zukünftige Veränderungen gut zu meistern?"
+        }
+      },
+      finalPrompt: "",
+      imageUrl: "",
+      gallery: [],
+      slideshowIndex: 0,
+      slideshowTimer: null
+    };
+
+    // ---------------------------
+    // Helper: DOM
+    // ---------------------------
+    function $(selector) {
+      return document.querySelector(selector);
+    }
+
+    function $all(selector) {
+      return document.querySelectorAll(selector);
+    }
+
+    function setStep(step) {
+      // Step Indikator
+      const label = $("#step-label");
+      const bar = $("#step-bar");
+      let fraction = 1 / 3;
+      if (step === 1) {
+        label.textContent = "Schritt 1 von 3 – Thema wählen";
+        fraction = 1 / 3;
+      } else if (step === 2) {
+        label.textContent = "Schritt 2 von 3 – Idee & Design";
+        fraction = 2 / 3;
+      } else {
+        label.textContent = "Schritt 3 von 3 – Prompt & Galerie";
+        fraction = 1;
+      }
+      bar.style.width = (fraction * 100) + "%";
+
+      // Sections
+      $("#step-1").classList.toggle("hidden", step !== 1);
+      $("#step-2").classList.toggle("hidden", step !== 2);
+      $("#step-3").classList.toggle("hidden", step !== 3);
+    }
+
+    function escapeForSvg(text) {
+      return (text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    // ---------------------------
+    // Prompt-Bau
+    // ---------------------------
+    function buildPromptFromInputs() {
+      const theme = state.selectedTheme ? state.themes[state.selectedTheme] : null;
+      const hauptmotiv = $("#input-hauptmotiv").value.trim();
+      const aktion = $("#input-aktion").value.trim();
+      const kontext = $("#input-kontext").value.trim();
+      const bildtyp = $("#select-bildtyp").value;
+      const stil = $("#select-stil").value;
+      const licht = $("#select-licht").value;
+      const farben = $("#select-farben").value;
+
+      const themeLine = theme
+        ? `Future customer service scene in the context of "${theme.label}".`
+        : "Future customer service and sales scene.";
+
+      const mainLine = hauptmotiv
+        ? `Main subject: ${hauptmotiv}.`
+        : "Main subject: customer service team and customer.";
+
+      const actionLine = aktion
+        ? `They are: ${aktion}.`
+        : "";
+
+      const contextLine = kontext
+        ? `Setting and mood: ${kontext}.`
+        : "";
+
+      const designLine = `Visual style: ${bildtyp}, ${stil}, lighting: ${licht}, color palette: ${farben}.`;
+
+      const fixedLine =
+        "Friendly, modern, inspiring atmosphere, medium shot at eye level, sharp focus, professional business look, 16:9 landscape composition. " +
+        "No exaggerated facial expressions, no distorted anatomy, no foreign logos or brands, no text, no watermarks.";
+
+      return [
+        themeLine,
+        mainLine,
+        actionLine,
+        contextLine,
+        designLine,
+        fixedLine
+      ]
+        .filter(Boolean)
+        .join(" ");
+    }
+
+    function updatePromptPreview() {
+      const prompt = buildPromptFromInputs();
+      $("#prompt-preview").textContent = prompt || "Sobald Du Deine Idee beschreibst, erscheint hier der Prompt.";
+      state.finalPrompt = prompt;
+    }
+
+    // ---------------------------
+    // Platzhalter-"Bildgenerierung"
+    // (hier später echte KI-API anbinden)
+    // ---------------------------
+    function createPlaceholderImage(themeLabel, shortIdea) {
+      const width = 1600;
+      const height = 900;
+      const title = escapeForSvg(themeLabel || "CSS Atelier");
+      const idea = escapeForSvg(shortIdea || "Deine Zukunftsbild-Idee");
+
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+          <defs>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+              <stop offset="40%" style="stop-color:#0369a1;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#22c55e;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grad)" />
+          <circle cx="${width / 2 - 260}" cy="${height / 2}" r="130" fill="rgba(15,23,42,0.7)" />
+          <circle cx="${width / 2}" cy="${height / 2 - 40}" r="90" fill="rgba(15,23,42,0.4)" />
+          <circle cx="${width / 2 + 250}" cy="${height / 2 + 30}" r="110" fill="rgba(15,23,42,0.5)" />
+          <text x="50%" y="32%" text-anchor="middle" fill="#e5e7eb" font-family="system-ui, sans-serif" font-size="46" font-weight="700">
+            ${title}
+          </text>
+          <text x="50%" y="52%" text-anchor="middle" fill="#e5e7eb" font-family="system-ui, sans-serif" font-size="26" font-weight="500">
+            Zukunftsbild-Idee
+          </text>
+          <foreignObject x="15%" y="58%" width="70%" height="30%">
+            <body xmlns="http://www.w3.org/1999/xhtml">
+              <div style="color:#e5e7eb;font-family:system-ui,sans-serif;font-size:20px;text-align:center;line-height:1.4;">
+                ${idea}
+              </div>
+            </body>
+          </foreignObject>
+        </svg>
+      `;
+      const encoded = encodeURIComponent(svg.trim());
+      return `data:image/svg+xml;utf8,${encoded}`;
+    }
+
+    function generateImage() {
+      const prompt = buildPromptFromInputs();
+      if (!state.selectedTheme || !prompt.trim()) {
+        alert("Bitte wähle ein Thema und beschreibe Deine Idee (mindestens Hauptmotiv & Aktion).");
+        return;
+      }
+
+      state.finalPrompt = prompt;
+      $("#prompt-preview").textContent = prompt;
+      $("#loading-overlay").classList.remove("hidden");
+      $("#result-placeholder").classList.add("hidden");
+      $("#result-image").classList.add("hidden");
+
+      // Typische Event-"Geschwindigkeit": kurze simulierte Ladezeit
+      setTimeout(() => {
+        const theme = state.selectedTheme ? state.themes[state.selectedTheme] : null;
+        const hauptmotiv = $("#input-hauptmotiv").value.trim();
+        const aktion = $("#input-aktion").value.trim();
+        const ideaSnippet = (hauptmotiv + (aktion ? " – " + aktion : "")).slice(0, 140);
+        const imgUrl = createPlaceholderImage(theme ? theme.label : "CSS Atelier", ideaSnippet);
+
+        state.imageUrl = imgUrl;
+
+        const img = $("#result-image");
+        img.src = imgUrl;
+        img.classList.remove("hidden");
+        $("#loading-overlay").classList.add("hidden");
+        $("#result-placeholder").classList.add("hidden");
+
+        const captionTheme = theme ? theme.label : "Ohne Thema";
+        $("#result-caption").textContent = `Aktuelles Bild: ${captionTheme} – ${ideaSnippet || "Beschreibung siehe Prompt"}`;
+
+        setStep(3);
+      }, 900);
+
+      // HINWEIS:
+      // Hier kannst Du später statt setTimeout + createPlaceholderImage
+      // einen echten API-Call zu deinem Backend einbauen, z.B.:
+      //
+      // fetch("/api/generate", { method: "POST", body: JSON.stringify({ ...inputs, prompt }) })
+      //   .then(r => r.json())
+      //   .then(data => { state.imageUrl = data.imageUrl; ... });
+    }
+
+    // ---------------------------
+    // Galerie
+    // ---------------------------
+    const GALLERY_STORAGE_KEY = "css-atelier-gallery-v1";
+
+    function loadGalleryFromStorage() {
+      try {
+        const raw = localStorage.getItem(GALLERY_STORAGE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        console.warn("Konnte Galerie nicht laden:", e);
+        return [];
+      }
+    }
+
+    function saveGalleryToStorage() {
+      try {
+        localStorage.setItem(GALLERY_STORAGE_KEY, JSON.stringify(state.gallery));
+      } catch (e) {
+        console.warn("Konnte Galerie nicht speichern:", e);
+      }
+    }
+
+    function addCurrentToGallery() {
+      if (!state.imageUrl || !state.finalPrompt) {
+        alert("Bitte zuerst ein Bild generieren.");
+        return;
+      }
+
+      const theme = state.selectedTheme ? state.themes[state.selectedTheme] : null;
+      const entry = {
+        id: Date.now().toString(),
+        themeId: state.selectedTheme,
+        themeLabel: theme ? theme.label : "Ohne Thema",
+        main: $("#input-hauptmotiv").value.trim(),
+        action: $("#input-aktion").value.trim(),
+        context: $("#input-kontext").value.trim(),
+        prompt: state.finalPrompt,
+        imageUrl: state.imageUrl,
+        createdAt: new Date().toISOString()
+      };
+
+      state.gallery.unshift(entry);
+      saveGalleryToStorage();
+      renderGalleryThumbs();
+      renderGalleryList();
+
+      alert("Bild wurde zur lokalen Zukunftsgalerie hinzugefügt.");
+    }
+
+    function renderGalleryThumbs() {
+      const container = $("#gallery-thumbs");
+      container.innerHTML = "";
+      if (!state.gallery.length) {
+        container.innerHTML = '<p class="col-span-3 text-[0.65rem] text-slate-400">Noch keine Einträge. Füge ein Bild hinzu, um die Galerie zu starten.</p>';
+        return;
+      }
+      state.gallery.slice(0, 6).forEach(entry => {
+        const div = document.createElement("div");
+        div.className = "relative aspect-video rounded-lg overflow-hidden border border-slate-700 bg-slate-950";
+        div.innerHTML = `
+          <img src="${entry.imageUrl}" alt="Galerie Bild" class="w-full h-full object-cover" />
+          <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/90 to-transparent px-1.5 py-1 text-[0.6rem]">
+            <div class="font-semibold">${entry.themeLabel}</div>
+            <div class="truncate">${entry.main || "Ohne Beschreibung"}</div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderGalleryList() {
+      const container = $("#gallery-list");
+      container.innerHTML = "";
+      if (!state.gallery.length) {
+        container.innerHTML = '<p class="text-xs text-slate-400">Noch keine Einträge in der Galerie.</p>';
+        return;
+      }
+
+      state.gallery.forEach(entry => {
+        const card = document.createElement("div");
+        card.className = "bg-slate-900/80 border border-slate-700 rounded-xl overflow-hidden flex flex-col";
+        card.innerHTML = `
+          <div class="relative aspect-video bg-slate-950">
+            <img src="${entry.imageUrl}" alt="Galerie Bild" class="w-full h-full object-cover" />
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/90 to-transparent px-2 py-1.5 text-[0.65rem]">
+              <div class="font-semibold">${entry.themeLabel}</div>
+              <div class="truncate">${entry.main || "Ohne Beschreibung"}</div>
+            </div>
+          </div>
+          <div class="p-2 flex-1 flex flex-col gap-1 text-[0.7rem] text-slate-200">
+            <div><span class="font-semibold">Hauptmotiv:</span> ${entry.main || "<em>—</em>"}</div>
+            <div><span class="font-semibold">Aktion:</span> ${entry.action || "<em>—</em>"}</div>
+            <div><span class="font-semibold">Kontext:</span> ${entry.context || "<em>—</em>"}</div>
+            <details class="mt-1">
+              <summary class="cursor-pointer text-sky-300 hover:text-sky-200">Prompt anzeigen</summary>
+              <pre class="mt-1 whitespace-pre-wrap font-mono text-[0.68rem] text-slate-100">${entry.prompt}</pre>
+            </details>
+            <div class="mt-auto text-[0.6rem] text-slate-400">
+              Erstellt: ${new Date(entry.createdAt).toLocaleString()}
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // ---------------------------
+    // Slideshow
+    // ---------------------------
+    function startSlideshow() {
+      if (!state.gallery.length) {
+        alert("Noch keine Bilder in der Galerie zum Anzeigen.");
+        return;
+      }
+      state.slideshowIndex = 0;
+      $("#slideshow-overlay").classList.remove("hidden");
+      document.documentElement.requestFullscreen?.();
+      showSlideshowImage();
+      state.slideshowTimer = setInterval(() => {
+        state.slideshowIndex = (state.slideshowIndex + 1) % state.gallery.length;
+        showSlideshowImage();
+      }, 6000);
+    }
+
+    function showSlideshowImage() {
+      const entry = state.gallery[state.slideshowIndex];
+      $("#slideshow-image").src = entry.imageUrl;
+      $("#slideshow-caption").textContent = `${entry.themeLabel} – ${entry.main || "Ohne Beschreibung"}`;
+    }
+
+    function stopSlideshow() {
+      $("#slideshow-overlay").classList.add("hidden");
+      if (state.slideshowTimer) {
+        clearInterval(state.slideshowTimer);
+        state.slideshowTimer = null;
+      }
+      if (document.fullscreenElement) {
+        document.exitFullscreen?.();
+      }
+    }
+
+    // ---------------------------
+    // Navigation
+    // ---------------------------
+    function setNavMode(mode) {
+      const createBtn = $("#nav-create");
+      const galleryBtn = $("#nav-gallery");
+      if (mode === "create") {
+        createBtn.classList.add("bg-sky-500");
+        createBtn.classList.remove("bg-slate-800");
+        galleryBtn.classList.remove("bg-sky-500");
+        galleryBtn.classList.add("bg-slate-800");
+        $("#gallery-modal").classList.add("hidden");
+      } else {
+        createBtn.classList.remove("bg-sky-500");
+        createBtn.classList.add("bg-slate-800");
+        galleryBtn.classList.add("bg-sky-500");
+        galleryBtn.classList.remove("bg-slate-800");
+        $("#gallery-modal").classList.remove("hidden");
+      }
+    }
+
+    // ---------------------------
+    // Initialisierung
+    // ---------------------------
+    function initApp() {
+      // Theme-Karten
+      $all(".theme-card").forEach(card => {
+        card.addEventListener("click", () => {
+          const themeId = card.getAttribute("data-theme");
+          state.selectedTheme = themeId;
+
+          // visuelles Highlight
+          $all(".theme-card").forEach(c => {
+            c.classList.remove("border-sky-500", "bg-sky-900/10");
+          });
+          card.classList.add("border-sky-500", "bg-sky-900/10");
+
+          // Next-Button aktivieren
+          const nextBtn = $("#btn-step1-next");
+          nextBtn.disabled = false;
+          nextBtn.classList.remove("bg-sky-500/40", "cursor-not-allowed");
+          nextBtn.classList.add("bg-sky-500", "hover:bg-sky-400");
+
+          // Caption aktualisieren
+          const theme = state.themes[themeId];
+          $("#result-caption").textContent = `Gewähltes Thema: ${theme.label}`;
+        });
+      });
+
+      // Schritt-Buttons
+      $("#btn-step1-next").addEventListener("click", () => setStep(2));
+      $("#btn-step2-back").addEventListener("click", () => setStep(1));
+      $("#btn-step3-back").addEventListener("click", () => setStep(2));
+
+      // Prompt-Eingaben beobachten
+      ["#input-hauptmotiv", "#input-aktion", "#input-kontext", "#select-bildtyp", "#select-stil", "#select-licht", "#select-farben"]
+        .forEach(sel => {
+          const el = $(sel);
+          if (el) el.addEventListener("input", updatePromptPreview);
+        });
+
+      // Generieren
+      $("#btn-generate").addEventListener("click", generateImage);
+      $("#btn-regenerate").addEventListener("click", generateImage);
+
+      // Galerie hinzufügen
+      $("#btn-add-gallery").addEventListener("click", addCurrentToGallery);
+
+      // Navigation
+      $("#nav-create").addEventListener("click", () => {
+        setNavMode("create");
+      });
+      $("#nav-gallery").addEventListener("click", () => {
+        setNavMode("gallery");
+      });
+      $("#btn-open-gallery").addEventListener("click", () => {
+        setNavMode("gallery");
+      });
+
+      // Galerie Modal
+      $("#btn-gallery-close").addEventListener("click", () => {
+        $("#gallery-modal").classList.add("hidden");
+        setNavMode("create");
+      });
+
+      // Slideshow
+      $("#btn-gallery-slideshow").addEventListener("click", startSlideshow);
+      $("#btn-slideshow-exit").addEventListener("click", stopSlideshow);
+
+      // Initialer State
+      state.gallery = loadGalleryFromStorage();
+      renderGalleryThumbs();
+      renderGalleryList();
+      updatePromptPreview();
+      setStep(1);
+      setNavMode("create");
+    }
+
+    document.addEventListener("DOMContentLoaded", initApp);
+  </script>
+</body>
+</html>
